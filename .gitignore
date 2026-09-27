@@ -9,3 +9,4 @@ __pycache__/
 *.tmp
 __pycache__/
 .env
+echo "awscliv2.zip" >> .gitignore && echo "aws/" >> .gitignore
