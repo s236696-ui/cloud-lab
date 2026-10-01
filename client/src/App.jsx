@@ -3,7 +3,7 @@ import axios from 'axios';
 import './App.css';
 
 // Địa chỉ Backend Docker
-const API_URL = 'http://localhost:5000/api/students';
+const API_URL = '/api/students';
 
 function App() {
   const [students, setStudents] = useState([]);

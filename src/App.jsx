@@ -101,7 +101,7 @@ function App() {
 
   return (
     <div className="container">
-      <h1>📚 Quản lý Sinh viên</h1>
+      <h1>Quản lý sinh viên - Version 2.0</h1>
       
       <form onSubmit={handleSubmit} className="student-form">
         <input
