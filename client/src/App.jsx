@@ -16,25 +16,43 @@ function App() {
   });
   const [editingId, setEditingId] = useState(null);
 
-  // Lấy danh sách sinh viên
+
+  // Lấy danh sách sinh viên, tự thử lại nếu Backend chưa sẵn sàng
   const fetchStudents = async () => {
-    try {
-      setLoading(true);
+    setLoading(true);
+    setError(null);
 
-      console.log('Calling API:', API_URL);
+    const maxAttempts = 5;
 
-      const response = await axios.get(API_URL);
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+      try {
+        console.log(`Gọi API lần ${attempt}:`, API_URL);
 
-      console.log('Response:', response.data);
+        const response = await axios.get(API_URL, {
+          timeout: 90000
+        });
 
-      setStudents(response.data.data || []);
-      setError(null);
-    } catch (error) {
-      console.error('Error fetching students:', error);
-      setError('Không thể tải danh sách sinh viên');
-    } finally {
-      setLoading(false);
+        console.log('Response:', response.data);
+
+        setStudents(response.data.data || []);
+        setError(null);
+        setLoading(false);
+        return;
+      } catch (error) {
+        console.error(`Lần ${attempt} thất bại:`, error);
+
+        if (attempt < maxAttempts) {
+          // Chờ 5 giây rồi thử kết nối lại
+          await new Promise(resolve => setTimeout(resolve, 5000));
+        } else {
+          setError(
+            'Backend đang khởi động hoặc chưa kết nối được. Vui lòng thử tải lại trang sau ít phút.'
+          );
+        }
+      }
     }
+
+    setLoading(false);
   };
 
   // Gọi API khi mở trang
@@ -141,11 +159,15 @@ function App() {
     );
   }
 
+
   // Có lỗi
   if (error) {
     return (
       <div className="error">
-        {error}
+        <p>{error}</p>
+        <button onClick={fetchStudents}>
+          Thử kết nối lại
+        </button>
       </div>
     );
   }
