@@ -3,7 +3,7 @@ import axios from 'axios';
 import './App.css';
 
 // Địa chỉ Backend Docker
-const API_URL = '/api/students';
+const API_URL = `${import.meta.env.VITE_API_URL || 'https://mern-backend-236696.onrender.com'}/api/students`;
 
 function App() {
   const [students, setStudents] = useState([]);
